@@ -84,7 +84,7 @@ infra.listen(infra,'layer.onsubmit',function(){
 	var layer=this;
 	var plugin='onsubmitpopup';
 	if(!layer[plugin])return;
-	infra.require('*popup/popup.js');
+	infra.require('-popup/popup.js');
 	infra.fora(layer[plugin],function(l){
 		l.parent=layer;
 		popup.open(l);
