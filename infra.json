@@ -1,0 +1,4 @@
+{
+	"dependencies":["event","controller"],
+	"js":["onsubmit.js","infra.js"]
+}

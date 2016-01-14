@@ -61,7 +61,7 @@ infrajs.setonsubmit=function(layer){
 					infra.session.syncNow();
 					
 					if(infra.loader)infra.loader.hide();
-					infra.fire(layer,'onsubmit');//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
+					Event.fire('layer.onsubmit',layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
 					if(typeof(layer.onsubmit)=='function')layer.onsubmit(layer);
 					if(ans.go)infra.Crumb.go(ans.go);
 					if(ans.popup){
