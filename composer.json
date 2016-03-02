@@ -1,7 +1,5 @@
 {
 	"name": "infrajs/layer-onsubmit",
-	"license": "GPL3",
-	"autoload": {
-		"psr-4": { "infrajs\\layer\\onsubmit\\": "/" }
-	}
+	"homepage":"https://github.com/infrajs/layer-onsubmit",
+	"license": "GPL3"
 }
