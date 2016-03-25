@@ -1,24 +1,10 @@
 //onsubmit - обработка ответа формы. Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
 //Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
 //При изменении msg слой перепарсивается
-infrajs.onsubmitinit=function(){
-	infrajs.parsedAdd(function(layer){//parsed должен забираться после установки msg config-a
-		//После onsubmit слой должен перепарсится
-		if(!layer.onsubmit)return '';
-		if(!layer.config||!layer.config.ans)return '';
-		var str=layer.config.ans.msg;
-		if(!str)str='';
-		if(layer.config.ans.time){
-			str+=layer.config.ans.time;
-		}
-		return str;		
-	});
-}
 infrajs.setonsubmit=function(layer){
-	if(!layer['onsubmit'])return;
+	if (!layer.onsubmit) return;
+	if (!layer.config) layer.config={};
 	
-	if(!layer.config)layer.config={};
-
 	var div=$('#'+layer.div);
 
 	var form=div.find('form');
