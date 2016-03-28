@@ -11,6 +11,5 @@ infrajs.parsedAdd(function(layer){//parsed должен забираться п�
 });
 Event.handler('layer.onshow', function (layer) {
 	//onsubmit
-	if(layer.tpl)console.log(layer.tpl);
 	infrajs.setonsubmit(layer);
 });
