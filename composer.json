@@ -1,5 +1,8 @@
 {
 	"name": "infrajs/layer-onsubmit",
 	"homepage":"https://github.com/infrajs/layer-onsubmit",
-	"license": "GPL3"
+	"license": "GPL3",
+	"require":{
+		"malsup/form": "~3"
+	}
 }
