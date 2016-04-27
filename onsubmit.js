@@ -41,7 +41,7 @@ infrajs.setonsubmit=function(layer){
 					}else{
 						msg='Connect Error';
 					}
-					if(layer.global)infrajs.global.set(layer.global);//Удаляет config.ans у слоёв
+					if(layer.global&&infrajs.global)infrajs.global.set(layer.global);//Удаляет config.ans у слоёв
 					if(!ans)ans={result:0,msg:msg};
 					layer.config.ans=ans;
 					infra.session.syncNow();
