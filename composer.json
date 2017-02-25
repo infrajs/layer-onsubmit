@@ -3,6 +3,6 @@
 	"homepage":"https://github.com/infrajs/layer-onsubmit",
 	"license": "GPL3",
 	"require":{
-		"malsup/form": "~3"
+		"jquery-form/form": "~4"
 	}
 }
