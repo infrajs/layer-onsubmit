@@ -1,4 +1,4 @@
-infrajs.parsedAdd(function(layer){//parsed должен забираться после установки msg config-a
+if (Controller && Controller.parsedAdd) Controller.parsedAdd(function(layer){//parsed должен забираться после установки msg config-a
 	//После onsubmit слой должен перепарсится
 	if (!layer.onsubmit) return '';
 	if (!layer.config || !layer.config.ans) return '';
