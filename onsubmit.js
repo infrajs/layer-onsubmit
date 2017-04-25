@@ -47,7 +47,7 @@ infrajs.setonsubmit=function(layer){
 					infra.session.syncNow();
 					
 					if(infra.loader)infra.loader.hide();
-					Event.fire('layer.onsubmit',layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
+					Event.fire('Layer.onsubmit',layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
 					if(typeof(layer.onsubmit)=='function')layer.onsubmit(layer);
 					if(ans.go)infra.Crumb.go(ans.go);
 					if(ans.popup){
@@ -66,7 +66,7 @@ infrajs.setonsubmit=function(layer){
 
 
 /*
-infra.listen(infra,'layer.onsubmit',function(){
+infra.listen(infra,'Layer.onsubmit',function(){
 	var layer=this;
 	var plugin='onsubmitpopup';
 	if(!layer[plugin])return;

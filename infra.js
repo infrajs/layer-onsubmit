@@ -9,7 +9,7 @@ if (Controller && Controller.parsedAdd) Controller.parsedAdd(function(layer){//p
 	}
 	return str;		
 });
-Event.handler('layer.onshow', function (layer) {
+Event.handler('Layer.onshow', function (layer) {
 	//onsubmit
 	infrajs.setonsubmit(layer);
 });
