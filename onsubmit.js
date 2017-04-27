@@ -41,21 +41,24 @@ infrajs.setonsubmit=function(layer){
 					}else{
 						msg='Connect Error';
 					}
-					if(layer.global&&infrajs.global)infrajs.global.set(layer.global);//Удаляет config.ans у слоёв
-					if(!ans)ans={result:0,msg:msg};
-					layer.config.ans=ans;
-					infra.session.syncNow();
-					
-					if(infra.loader)infra.loader.hide();
-					Event.fire('Layer.onsubmit',layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
-					if(typeof(layer.onsubmit)=='function')layer.onsubmit(layer);
-					if(ans.go)infra.Crumb.go(ans.go);
-					if(ans.popup){
-						if(ans.result)popup.success(ans.msg);
+					if (layer.global&&infrajs.global) infrajs.global.set(layer.global);//Удаляет config.ans у слоёв
+					if (!ans) ans = {
+						result: 0,
+						msg: msg
+					};
+					layer.config.ans = ans;
+
+					Session.syncNow();
+					if (window.Loader) Loader.hide();
+					Event.fire('Layer.onsubmit', layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
+					if (typeof(layer.onsubmit) == 'function') layer.onsubmit(layer);
+					if (ans.go) Crumb.go(ans.go);
+					if (ans.popup) {
+						if (ans.result) popup.success(ans.msg);
 						else popup.error(ans.msg);
 					} else {
-						infrajs.check(layer);
-						infrajs.check();
+						Controller.check(layer);
+						Controller.check();
 					}
 				}
 			});
