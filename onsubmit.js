@@ -58,8 +58,8 @@ infrajs.setonsubmit=function(layer){
 						else popup.error(ans.msg);
 					} else {
 						Controller.check(layer);
-						Controller.check();
 					}
+					Controller.check();
 				}
 			});
 		},1);
