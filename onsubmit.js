@@ -7,16 +7,16 @@ infrajs.setonsubmit=function(layer){
 	
 	var div=$('#'+layer.div);
 
-	var form=div.find('form');
+	var form=div.find('form').not('[data-onsubmit]').attr('data-onsubmit','true');
 
 	form.find('.submit').click(function(){
-		form.submit();
+		$(this).parents('form').submit();
 	});
 	form.submit(function(e){
 		e.preventDefault(); // <-- important
-
-		if(layer.config['onsubmit'])return false;//Защита от двойной отправки
-		layer.config['onsubmit']=true;
+		var form = $(this);
+		if (layer.config['onsubmit']) return false;//Защита от двойной отправки
+		layer.config['onsubmit'] = true;
 
 		if(infra.loader)infra.loader.show();
 		setTimeout(function(){// Надо чтобы все обработчики повесились на onsubmit и сделали всё что нужно с отправляемыми данными и только потом отправлять
