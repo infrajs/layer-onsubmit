@@ -1,7 +1,6 @@
 {
 	"name": "infrajs/layer-onsubmit",
 	"homepage":"https://github.com/infrajs/layer-onsubmit",
-	"license": "GPL3",
 	"require":{
 		"jquery-form/form": "~4"
 	}
