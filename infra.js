@@ -11,8 +11,7 @@
 		return str;		
 	});
 
-	let Load = (await import('/vendor/akiyatkin/load/Load.js')).default
-	let CDN = await Load.on('import-default', '/vendor/akiyatkin/load/CDN.js')
+	let CDN = (await import('/vendor/akiyatkin/load/CDN.js')).default
 	await CDN.load('jquery');
 	Event.handler('Layer.onshow', function (layer) {
 		//onsubmit
