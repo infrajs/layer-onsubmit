@@ -2,6 +2,6 @@
 	"name": "infrajs/layer-onsubmit",
 	"homepage":"https://github.com/infrajs/layer-onsubmit",
 	"require":{
-		"jquery-form/form": "~4"
+		"infrajs/popup": "~1"
 	}
 }

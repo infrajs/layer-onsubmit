@@ -1,81 +1,64 @@
 //onsubmit - обработка ответа формы. Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
 //Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
 //При изменении msg слой перепарсивается
-infrajs.setonsubmit=function(layer){
-	if (!layer.onsubmit) return;
-	if (!layer.config) layer.config={};
-	
-	var div=$('#'+layer.div);
+let weakset_onsubmit_forms = new WeakSet()
+infrajs.setonsubmit = function (layer) {
+	if (!layer.onsubmit) return
+	if (!layer.config) layer.config = {}
+	let div = document.getElementById(layer.div)
+	let tag = tag => div.getElementsByTagName(tag)
+	let cls = (cls, div = div) => div.getElementsByClassName(cls)
+	let form = tag('form')[0]
+	if (weakset_onsubmit_forms.has(form)) return
+	weakset_onsubmit_forms.add(form)
 
-	var form=div.find('form').not('[data-onsubmit]').attr('data-onsubmit','true');
+	for (let btn of cls('submit', form)) {
+		btn.addEventListener('click', form.submit)
+	}
+	//Global, Event, Crumb, Controller, Access, Popup
+	form.addEventListener('submit', (e) => {
+		e.preventDefault();
+		if (layer.config.onsubmit) return false;//Защита от двойной отправки
+		layer.config.onsubmit = true;
 
-	form.find('.submit').click(function(){
-		$(this).parents('form').submit();
-	});
-	form.submit(function(e){
-		e.preventDefault(); // <-- important
-		var form = $(this);
-		if (layer.config['onsubmit']) return false;//Защита от двойной отправки
-		layer.config['onsubmit'] = true;
-
-		if(infra.loader)infra.loader.show();
-		setTimeout(function(){// Надо чтобы все обработчики повесились на onsubmit и сделали всё что нужно с отправляемыми данными и только потом отправлять
+		setTimeout(async () => { 
+			// Надо чтобы все обработчики сделали всё что нужно с отправляемыми данными и только потом отправлять
 			//autosave должен примениться
-			Load.require('vendor/jquery-form/form/dist/jquery.form.min.js');
-			form.ajaxSubmit({
-				dataType:'json',
-				async:false,
-				type:'post',
-				complete:function(xhr){
-					layer.config['onsubmit']=false;
-					var ans=false,text=false,msg='';
-					if(xhr){
-						text=xhr.responseText;
-						try{
-							if(!text)throw 'Empty response';
-							ans=eval('(function(a){return a})('+text+')');
-						}catch(e){
-							msg='Server Error';
-							if(infra.debug()) msg+='<hr>'+e+'<hr>'+text;
-						}
-					}else{
-						msg='Connect Error';
-					}
-					if (layer.global&&infrajs.global) infrajs.global.set(layer.global);//Удаляет config.ans у слоёв
-					if (!ans) ans = {
-						result: 0,
-						msg: msg
-					};
-					layer.config.ans = ans;
-
-					Session.syncNow();
-					if (window.Loader) Loader.hide();
-					Event.fire('Layer.onsubmit', layer);//в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
-					if (typeof(layer.onsubmit) == 'function') layer.onsubmit(layer);
-					if (ans.go) Crumb.go(ans.go);
-					if (ans.popup) {
-						if (ans.result) popup.success(ans.msg);
-						else popup.error(ans.msg);
-					} else {
-						Controller.check(layer);
-					}
-					Controller.check();
+			let response = await fetch(form.action, {
+		    	method: 'POST',
+				body: new FormData(form)
+			})
+			let msg = 'Connect Error'
+			let ans = false
+			if (response) {
+				try {
+					ans = await response.json()
+				} catch (e) {
+					msg =' Server Error'
+					let text = await response.text()
+					if (Access.debug()) msg += '<hr>' + e + '<hr>' + text
 				}
-			});
-		},1);
+			}
+			if (layer.global && infrajs.global) {
+				Global.set(layer.global); //Удаляет config.ans у слоёв
+			}
+			if (!ans) ans = {
+				result: 0,
+				msg: msg
+			}
+			layer.config.ans = ans
+			await Session.async()
+			layer.config.onsubmit = false
+			Event.fire('Layer.onsubmit', layer) //в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
+			if (typeof(layer.onsubmit) == 'function') layer.onsubmit(layer)
+			if (ans.go) Crumb.go(ans.go)
+			if (ans.popup) {
+				if (ans.result) Popup.success(ans.msg)
+				else Popup.error(ans.msg)
+			} else {
+				Controller.check(layer)
+			}
+		}, 200);
 		return false;
-	});
-};
-
-
-/*
-infra.listen(infra,'Layer.onsubmit',function(){
-	var layer=this;
-	var plugin='onsubmitpopup';
-	if(!layer[plugin])return;
-	infra.require('-popup/popup.js');
-	infra.fora(layer[plugin],function(l){
-		l.parent=layer;
-		popup.open(l);
 	})
-});*/
+};
