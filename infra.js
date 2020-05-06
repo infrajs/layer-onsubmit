@@ -11,8 +11,6 @@
 		return str;		
 	});
 
-	let CDN = (await import('/vendor/akiyatkin/load/CDN.js')).default
-	await CDN.load('jquery');
 	Event.handler('Layer.onshow', function (layer) {
 		//onsubmit
 		infrajs.setonsubmit(layer);
