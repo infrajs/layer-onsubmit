@@ -15,7 +15,7 @@ infrajs.setonsubmit = function (layer) {
 	for (let btn of cls('submit', form)) {
 		btn.addEventListener('click', form.submit)
 	}
-	//Global, Event, Crumb, Controller, Access, Popup
+	//Event, Crumb, Controller, Access
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		if (layer.config.onsubmit) return false;//Защита от двойной отправки
@@ -40,6 +40,7 @@ infrajs.setonsubmit = function (layer) {
 				}
 			}
 			if (layer.global && infrajs.global) {
+				let {Global} = await import('/vendor/infrajs/layer-global/Global.js')
 				Global.set(layer.global); //Удаляет config.ans у слоёв
 			}
 			if (!ans) ans = {
@@ -53,6 +54,7 @@ infrajs.setonsubmit = function (layer) {
 			if (typeof(layer.onsubmit) == 'function') layer.onsubmit(layer)
 			if (ans.go) Crumb.go(ans.go)
 			if (ans.popup) {
+				let {Popup} = await import('/vendor/infrajs/popup/Popup.js')
 				if (ans.result) Popup.success(ans.msg)
 				else Popup.error(ans.msg)
 			} else {
