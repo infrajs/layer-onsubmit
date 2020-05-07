@@ -60,6 +60,7 @@ infrajs.setonsubmit = function (layer) {
 				else Popup.error(ans.msg)
 			} else {
 				Controller.check(layer)
+				//Controller.check()
 			}
 		}, 200);
 		return false;
