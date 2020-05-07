@@ -15,7 +15,7 @@ infrajs.setonsubmit = function (layer) {
 	for (let btn of cls('submit', form)) {
 		btn.addEventListener('click', form.submit)
 	}
-	//Event, Crumb, Controller, Access
+	//Event, Crumb, Controller
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		if (layer.config.onsubmit) return false;//Защита от двойной отправки
@@ -36,7 +36,8 @@ infrajs.setonsubmit = function (layer) {
 				} catch (e) {
 					msg =' Server Error'
 					let text = await response.text()
-					if (Access.debug()) msg += '<hr>' + e + '<hr>' + text
+					let {Access} = await import('/vendor/infrajs/access/Access.js') 
+					if (await Access.debug()) msg += '<hr>' + e + '<hr>' + text
 				}
 			}
 			if (layer.global && infrajs.global) {
