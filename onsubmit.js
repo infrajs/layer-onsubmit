@@ -1,8 +1,11 @@
 //onsubmit - обработка ответа формы. Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
 //Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
 //При изменении msg слой перепарсивается
+import { Event } from '/vendor/infrajs/event/Event.js'
+import { Fire } from '/vendor/akiyatkin/load/Fire.js'
+import { Crumb } from '/vendor/infrajs/controller/src/Crumb.js'
 let weakset_onsubmit_forms = new WeakSet()
-infrajs.setonsubmit = function (layer) {
+Controller.setonsubmit = function (layer) {
 	if (!layer.onsubmit) return
 	if (!layer.config) layer.config = {}
 	let div = document.getElementById(layer.div)
@@ -21,11 +24,11 @@ infrajs.setonsubmit = function (layer) {
 		if (layer.config.onsubmit) return false;//Защита от двойной отправки
 		layer.config.onsubmit = true;
 
-		setTimeout(async () => { 
+		setTimeout(async () => {
 			// Надо чтобы все обработчики сделали всё что нужно с отправляемыми данными и только потом отправлять
 			//autosave должен примениться
 			let response = await fetch(form.action, {
-		    	method: 'POST',
+				method: 'POST',
 				body: new FormData(form)
 			})
 			let msg = 'Connect Error'
@@ -34,14 +37,14 @@ infrajs.setonsubmit = function (layer) {
 				try {
 					ans = await response.json()
 				} catch (e) {
-					msg =' Server Error'
+					msg = ' Server Error'
 					let text = await response.text()
-					let {Access} = await import('/vendor/infrajs/access/Access.js') 
+					let { Access } = await import('/vendor/infrajs/access/Access.js')
 					if (await Access.debug()) msg += '<hr>' + e + '<hr>' + text
 				}
 			}
-			if (layer.global && infrajs.global) {
-				let {Global} = await import('/vendor/infrajs/layer-global/Global.js')
+			if (layer.global) {
+				let { Global } = await import('/vendor/infrajs/layer-global/Global.js')
 				Global.set(layer.global); //Удаляет config.ans у слоёв
 			}
 			if (!ans) ans = {
@@ -51,11 +54,13 @@ infrajs.setonsubmit = function (layer) {
 			layer.config.ans = ans
 			await Session.async()
 			layer.config.onsubmit = false
+			let { Layer } = await import('/vendor/infrajs/controller/src/Layer.js')
+			await Fire.on(Layer, 'submit', layer)
 			Event.fire('Layer.onsubmit', layer) //в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
-			if (typeof(layer.onsubmit) == 'function') layer.onsubmit(layer)
+			if (typeof (layer.onsubmit) == 'function') layer.onsubmit(layer)
 			if (ans.go) Crumb.go(ans.go)
 			if (ans.popup) {
-				let {Popup} = await import('/vendor/infrajs/popup/Popup.js')
+				let { Popup } = await import('/vendor/infrajs/popup/Popup.js')
 				if (ans.result) Popup.success(ans.msg)
 				else Popup.error(ans.msg)
 			} else {
