@@ -1,9 +1,13 @@
-//onsubmit - обработка ответа формы. Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
-//Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
-//При изменении msg слой перепарсивается
+
 import { Event } from '/vendor/infrajs/event/Event.js'
 import { Fire } from '/vendor/akiyatkin/load/Fire.js'
 import { Crumb } from '/vendor/infrajs/controller/src/Crumb.js'
+import { Layer } from '/vendor/infrajs/controller/src/Layer.js'
+
+//Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
+//Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
+//При изменении msg слой перепарсивается
+
 let ws = new WeakSet()
 Controller.setonsubmit = function (layer) {
 	if (!layer.onsubmit) return
@@ -26,6 +30,8 @@ Controller.setonsubmit = function (layer) {
 		layer.config.onsubmit = true;
 
 		setTimeout(async () => {
+			await Fire.tikon(Layer, 'submit', layer)
+			
 			// Надо чтобы все обработчики сделали всё что нужно с отправляемыми данными и только потом отправлять
 			//autosave должен примениться
 			let response = await fetch(form.action, {
@@ -55,8 +61,7 @@ Controller.setonsubmit = function (layer) {
 			layer.config.ans = ans
 			await Session.async()
 			layer.config.onsubmit = false
-			let { Layer } = await import('/vendor/infrajs/controller/src/Layer.js')
-			await Fire.on(Layer, 'submit', layer)
+			await Fire.tikon(Layer, 'submited', layer)
 			Event.fire('Layer.onsubmit', layer) //в layers.json указывается onsubmit:true, а в tpl осуществляется подписка на событие onsubmit и обработка
 			if (typeof (layer.onsubmit) == 'function') layer.onsubmit(layer)
 			if (ans.go) Crumb.go(ans.go)
