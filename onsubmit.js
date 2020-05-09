@@ -4,7 +4,7 @@
 import { Event } from '/vendor/infrajs/event/Event.js'
 import { Fire } from '/vendor/akiyatkin/load/Fire.js'
 import { Crumb } from '/vendor/infrajs/controller/src/Crumb.js'
-let weakset_onsubmit_forms = new WeakSet()
+let ws = new WeakSet()
 Controller.setonsubmit = function (layer) {
 	if (!layer.onsubmit) return
 	if (!layer.config) layer.config = {}
@@ -12,8 +12,9 @@ Controller.setonsubmit = function (layer) {
 	let tag = tag => div.getElementsByTagName(tag)
 	let cls = (cls, div = div) => div.getElementsByClassName(cls)
 	let form = tag('form')[0]
-	if (weakset_onsubmit_forms.has(form)) return
-	weakset_onsubmit_forms.add(form)
+	if (!form) return
+	if (ws.has(form)) return
+	ws.add(form)
 
 	for (let btn of cls('submit', form)) {
 		btn.addEventListener('click', form.submit)
