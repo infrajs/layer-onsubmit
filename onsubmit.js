@@ -28,7 +28,7 @@ Controller.setonsubmit = function (layer) {
 		e.preventDefault();
 		if (layer.config.onsubmit) return false;//Защита от двойной отправки
 		layer.config.onsubmit = true;
-
+		
 		setTimeout(async () => {
 			await Fire.tikon(Layer, 'submit', layer)
 			
