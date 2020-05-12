@@ -1,5 +1,5 @@
 {
 	"dependencies":["event","controller"],
-	"js":["onsubmit.js","infra.js"],
+	"js":["infra.js"],
 	"require":["infra.php"]
 }
