@@ -3,6 +3,7 @@ import { Fire } from '/vendor/akiyatkin/load/Fire.js'
 import { Popup } from '/vendor/infrajs/popup/Popup.js'
 import { Access } from '/vendor/infrajs/access/Access.js'
 import { Crumb } from '/vendor/infrajs/controller/src/Crumb.js'
+import { Controller } from '/vendor/infrajs/controller/src/Controller.js'
 
 //Ответ обработчика находится в layer.config.ans (обрабатываются параметры в ответе result, msg
 //Проверки перед отправки формы не предусмотрено. Всё проверяет сервер и отвечает в msg.
